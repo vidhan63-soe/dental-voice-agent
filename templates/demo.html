@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bright Smile Dental — Voice AI Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,0..100&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAF7F2;
+      --ink: #1A2B29;
+      --teal: #0C6B65;
+      --teal-dark: #084540;
+      --teal-light: #E8F2F0;
+      --coral: #D9644A;
+      --coral-dark: #B84E37;
+      --muted: #6B7570;
+      --line: #E5DDD0;
+      --paper: #FFFFFF;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: var(--bg); color: var(--ink);
+      font-family: 'Geist', system-ui, sans-serif;
+      font-weight: 400; line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100%;
+    }
+    body::before {
+      content: "";
+      position: fixed; inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(12, 107, 101, 0.03) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(217, 100, 74, 0.025) 0%, transparent 45%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 32px 24px 48px; }
+
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 72px;
+    }
+    .brand { display: flex; align-items: baseline; gap: 10px; }
+    .brand-mark {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 144, "SOFT" 100;
+      font-weight: 500; font-size: 22px; letter-spacing: -0.02em;
+      color: var(--teal-dark);
+    }
+    .brand-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 14px;
+      transition: color 160ms;
+    }
+    .nav-links a:hover { color: var(--ink); }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 72px;
+      align-items: start;
+      margin-bottom: 80px;
+    }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    .kicker {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; color: var(--teal);
+      text-transform: uppercase; letter-spacing: 0.18em;
+      margin-bottom: 24px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .kicker::before {
+      content: ""; display: inline-block;
+      width: 24px; height: 1px; background: var(--teal);
+    }
+
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 144, "SOFT" 50;
+      font-weight: 400;
+      font-size: clamp(40px, 6vw, 64px);
+      line-height: 1.03;
+      letter-spacing: -0.035em;
+      margin-bottom: 24px;
+    }
+    h1 em {
+      font-style: italic;
+      font-variation-settings: "opsz" 144, "SOFT" 100;
+      color: var(--coral);
+    }
+
+    .lead {
+      font-size: 18px; color: var(--muted);
+      max-width: 500px; margin-bottom: 32px;
+    }
+
+    .features { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .features li {
+      display: flex; gap: 14px; align-items: flex-start;
+      font-size: 15px;
+    }
+    .features li .dot {
+      flex-shrink: 0; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--teal); margin-top: 9px;
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 36px 32px;
+      box-shadow:
+        0 1px 2px rgba(26, 43, 41, 0.04),
+        0 12px 40px -20px rgba(26, 43, 41, 0.18);
+      position: relative;
+    }
+    .card::before {
+      content: "";
+      position: absolute; top: -1px; right: 40px;
+      width: 80px; height: 4px;
+      background: var(--coral);
+      border-radius: 0 0 4px 4px;
+    }
+
+    .card h2 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 40;
+      font-weight: 500; font-size: 24px; letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .card p.sub {
+      font-size: 14px; color: var(--muted); margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    input[type="text"], input[type="tel"], select {
+      width: 100%;
+      padding: 13px 14px;
+      font-family: inherit; font-size: 15px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 160ms, background 160ms;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    input:focus, select:focus {
+      border-color: var(--teal); background: var(--paper);
+    }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%236B7570' stroke-width='1.5' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+    select:disabled {
+      color: var(--muted); cursor: not-allowed; opacity: 0.6;
+    }
+
+    .field { margin-bottom: 16px; }
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .hint {
+      font-size: 12px; color: var(--muted); margin-top: 5px;
+    }
+
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 20px 0 16px;
+      font-size: 11px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.14em;
+    }
+    .divider::before, .divider::after {
+      content: ""; flex: 1; height: 1px; background: var(--line);
+    }
+
+    .optional-note {
+      font-size: 12px; color: var(--muted);
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+
+    button.cta {
+      width: 100%;
+      padding: 15px 20px;
+      background: var(--ink);
+      color: var(--bg);
+      border: 0; border-radius: 11px;
+      font-family: inherit; font-size: 15px; font-weight: 500;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: background 160ms, transform 120ms;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      margin-top: 8px;
+    }
+    button.cta:hover { background: var(--teal-dark); }
+    button.cta:active { transform: translateY(1px); }
+    button.cta:disabled { background: var(--muted); cursor: not-allowed; }
+    button.cta svg { width: 16px; height: 16px; transition: transform 200ms; }
+    button.cta:hover svg { transform: translateX(3px); }
+
+    .error {
+      background: #FEF0ED;
+      border: 1px solid #F5C8BD;
+      color: var(--coral-dark);
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .info-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding: 32px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 48px;
+    }
+    @media (max-width: 720px) { .info-strip { grid-template-columns: 1fr; gap: 20px; } }
+    .info-strip > div { display: flex; flex-direction: column; gap: 6px; }
+    .info-strip .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+    .info-strip .val {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 40;
+      font-weight: 500; font-size: 18px; color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+
+    section.stack h3 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 40;
+      font-weight: 500; font-size: 18px;
+      margin-bottom: 20px; color: var(--muted);
+    }
+    .stack-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    }
+    @media (max-width: 720px) { .stack-grid { grid-template-columns: repeat(2, 1fr); } }
+    .stack-item {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .stack-item .role {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em;
+      color: var(--teal); margin-bottom: 6px;
+    }
+    .stack-item .name {
+      font-family: 'Fraunces', serif;
+      font-weight: 500; font-size: 17px; letter-spacing: -0.01em;
+    }
+    .stack-item .what { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+    footer {
+      margin-top: 80px; padding-top: 24px;
+      border-top: 1px solid var(--line);
+      font-size: 12px; color: var(--muted);
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    footer a { color: var(--muted); text-decoration: underline; text-decoration-color: var(--line); }
+    footer a:hover { color: var(--ink); }
+
+    .animate-in { opacity: 0; transform: translateY(12px); animation: slideUp 700ms cubic-bezier(0.16,1,0.3,1) forwards; }
+    .animate-in.d1 { animation-delay: 80ms; }
+    .animate-in.d2 { animation-delay: 180ms; }
+    .animate-in.d3 { animation-delay: 280ms; }
+    .animate-in.d4 { animation-delay: 380ms; }
+    @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+
+    .loading-tag {
+      font-size: 11px; color: var(--muted); font-style: italic;
+      display: inline-block; margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="animate-in">
+      <div class="brand">
+        <span class="brand-mark">Bright Smile</span>
+        <span class="brand-sub">Dental · Dallas</span>
+      </div>
+      <div class="nav-links"><a href="/dashboard">Dashboard</a></div>
+    </nav>
+
+    <div class="hero">
+      <div>
+        <div class="kicker animate-in d1">Voice AI · Live demo</div>
+        <h1 class="animate-in d2">Our front desk, <em>now answering</em> around the clock.</h1>
+        <p class="lead animate-in d3">
+          A voice assistant that books appointments against real availability,
+          handles rescheduling, answers patient questions, and hands off to a
+          person when it matters. Enter your number and take it for a spin.
+        </p>
+        <ul class="features animate-in d4">
+          <li><span class="dot"></span> Books against real calendar — the agent only offers slots that are actually open.</li>
+          <li><span class="dot"></span> Captures name, phone, service, time, urgency, and notes. Exports to CSV for clinic staff.</li>
+          <li><span class="dot"></span> Handles emergencies and explicit handoff requests with a live transfer to a receptionist.</li>
+          <li><span class="dot"></span> Every call logged with full transcript — visible on the admin dashboard.</li>
+        </ul>
+      </div>
+
+      <form class="card animate-in d2" id="request-form" novalidate>
+        <h2>Try it now</h2>
+        <p class="sub">We'll call you within a few seconds. Pick up and start talking.</p>
+
+        <div id="err" class="error" style="display:none"></div>
+
+        <div class="field">
+          <label for="name">Your name</label>
+          <input type="text" id="name" name="name" autocomplete="name" required placeholder="Jane Doe" />
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone number</label>
+          <input type="tel" id="phone" name="phone" autocomplete="tel" required placeholder="+1 555 123 4567" />
+          <p class="hint">Include country code. Trial calls only work for pre-whitelisted numbers — see README.</p>
+        </div>
+
+        <div class="divider">Optional</div>
+        <p class="optional-note">Pre-pick a time — or let the agent find one for you during the call.</p>
+
+        <div class="field">
+          <label for="service">Service <span class="loading-tag">optional</span></label>
+          <select id="service" name="service">
+            <option value="">— ask me on the call —</option>
+            <option value="checkup">General checkup</option>
+            <option value="cleaning">Teeth cleaning</option>
+            <option value="tooth_pain">Tooth pain consultation</option>
+            <option value="cavity">Cavity treatment</option>
+            <option value="root_canal_consult">Root canal consultation</option>
+            <option value="crown">Crown</option>
+            <option value="emergency">Dental emergency</option>
+          </select>
+        </div>
+
+        <div class="field-row">
+          <div>
+            <label for="date">Date <span class="loading-tag">optional</span></label>
+            <select id="date" name="date">
+              <option value="">— loading dates —</option>
+            </select>
+          </div>
+          <div>
+            <label for="slot">Time <span class="loading-tag">optional</span></label>
+            <select id="slot" name="slot_id" disabled>
+              <option value="">— pick a date first —</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="cta" id="submit-btn">
+          <span>Call me now</span>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </button>
+      </form>
+    </div>
+
+    <div class="info-strip animate-in d3">
+      <div>
+        <span class="label">Clinic hours</span>
+        <span class="val">Mon–Sat, 9 AM – 7 PM</span>
+      </div>
+      <div>
+        <span class="label">Service area</span>
+        <span class="val">Dallas · Irving · Plano · Richardson</span>
+      </div>
+      <div>
+        <span class="label">Emergencies</span>
+        <span class="val">Same-day appointments</span>
+      </div>
+    </div>
+
+    <section class="stack animate-in d4">
+      <h3>Built with</h3>
+      <div class="stack-grid">
+        <div class="stack-item">
+          <div class="role">Telephony</div>
+          <div class="name">Twilio</div>
+          <div class="what">Outbound calls + TwiML</div>
+        </div>
+        <div class="stack-item">
+          <div class="role">Speech</div>
+          <div class="name">Sarvam AI</div>
+          <div class="what">Saaras v3 · Bulbul v3</div>
+        </div>
+        <div class="stack-item">
+          <div class="role">Brain</div>
+          <div class="name">Gemini 2.5 Flash</div>
+          <div class="what">With tool calling</div>
+        </div>
+        <div class="stack-item">
+          <div class="role">Backend</div>
+          <div class="name">Flask · SQLite</div>
+          <div class="what">Running on MilesWeb</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span>Assignment demo · not a real dental service</span>
+      <span><a href="/dashboard">Admin dashboard →</a></span>
+    </footer>
+  </div>
+
+  <script>
+    const form = document.getElementById('request-form');
+    const errBox = document.getElementById('err');
+    const btn = document.getElementById('submit-btn');
+    const dateSel = document.getElementById('date');
+    const slotSel = document.getElementById('slot');
+
+    // Populate dates on load
+    async function loadDates() {
+      try {
+        const res = await fetch('/api/vacant-dates');
+        const data = await res.json();
+        dateSel.innerHTML = '<option value="">— ask me on the call —</option>';
+        if (data.ok && data.dates.length) {
+          for (const d of data.dates) {
+            const opt = document.createElement('option');
+            opt.value = d.date;
+            opt.textContent = d.label;
+            dateSel.appendChild(opt);
+          }
+        } else {
+          const opt = document.createElement('option');
+          opt.value = '';
+          opt.textContent = 'No free slots — agent will check on the call';
+          dateSel.appendChild(opt);
+        }
+      } catch {
+        dateSel.innerHTML = '<option value="">— ask me on the call —</option>';
+      }
+    }
+
+    // Populate slots when date changes
+    dateSel.addEventListener('change', async () => {
+      slotSel.innerHTML = '<option value="">— loading —</option>';
+      slotSel.disabled = true;
+      if (!dateSel.value) {
+        slotSel.innerHTML = '<option value="">— pick a date first —</option>';
+        return;
+      }
+      try {
+        const res = await fetch('/api/vacant-slots?date=' + encodeURIComponent(dateSel.value));
+        const data = await res.json();
+        slotSel.innerHTML = '<option value="">— any time that day —</option>';
+        if (data.ok) {
+          for (const s of data.slots) {
+            const opt = document.createElement('option');
+            opt.value = s.slot_id;
+            opt.textContent = s.label;
+            slotSel.appendChild(opt);
+          }
+          slotSel.disabled = false;
+        }
+      } catch {
+        slotSel.innerHTML = '<option value="">— error, skip for now —</option>';
+      }
+    });
+
+    loadDates();
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errBox.style.display = 'none';
+      btn.disabled = true;
+      btn.querySelector('span').textContent = 'Connecting…';
+
+      const fd = new FormData(form);
+      const body = {
+        name: fd.get('name'),
+        phone: fd.get('phone'),
+        service: fd.get('service') || null,
+        slot_id: fd.get('slot_id') || null,
+      };
+
+      try {
+        const res = await fetch('/api/request-call', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          window.location.href = `/status/${data.request_id}`;
+          return;
+        }
+        errBox.textContent = data.error || 'Something went wrong.';
+        errBox.style.display = 'block';
+      } catch {
+        errBox.textContent = 'Network error — please check your connection and retry.';
+        errBox.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.querySelector('span').textContent = 'Call me now';
+      }
+    });
+  </script>
+</body>
+</html>

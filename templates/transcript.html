@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Call transcript — Bright Smile Dental</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,0..100&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAF7F2; --ink: #1A2B29; --teal: #0C6B65; --teal-dark: #084540;
+      --coral: #D9644A; --muted: #6B7570; --line: #E5DDD0; --paper: #FFFFFF;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: var(--bg); color: var(--ink);
+      font-family: 'Geist', system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 780px; margin: 0 auto; padding: 32px 24px 64px; }
+    nav { display: flex; justify-content: space-between; margin-bottom: 32px; }
+    .brand {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 144, "SOFT" 100;
+      font-weight: 500; font-size: 20px; color: var(--teal-dark);
+    }
+    .back { font-size: 14px; color: var(--muted); text-decoration: none; }
+    .back:hover { color: var(--ink); }
+
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 144;
+      font-weight: 400; font-size: 32px; letter-spacing: -0.025em;
+      margin-bottom: 8px;
+    }
+    .meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; color: var(--muted); margin-bottom: 32px;
+    }
+
+    .call-card {
+      background: var(--paper); border: 1px solid var(--line);
+      border-radius: 16px; padding: 24px; margin-bottom: 24px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    }
+    @media (max-width: 600px) { .call-card { grid-template-columns: 1fr 1fr; } }
+    .field .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em;
+      color: var(--muted); display: block; margin-bottom: 4px;
+    }
+    .field .val { color: var(--ink); font-size: 14px; }
+
+    .transcript {
+      background: var(--paper); border: 1px solid var(--line);
+      border-radius: 16px; padding: 28px;
+    }
+    .transcript h2 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 40;
+      font-weight: 500; font-size: 18px;
+      margin-bottom: 20px; padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+    .turn { display: flex; gap: 14px; margin-bottom: 16px; }
+    .turn-who {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em;
+      min-width: 72px; padding-top: 2px; color: var(--muted);
+    }
+    .turn.user .turn-who { color: var(--coral); }
+    .turn.assistant .turn-who { color: var(--teal); }
+    .turn-content { flex: 1; font-size: 15px; line-height: 1.55; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav>
+      <span class="brand">Bright Smile</span>
+      <a class="back" href="/dashboard">← Dashboard</a>
+    </nav>
+
+    <h1>Call transcript</h1>
+    <div class="meta">{{ call.call_sid }}</div>
+
+    <div class="call-card">
+      <div class="field">
+        <span class="label">Direction</span>
+        <span class="val">{{ call.direction or '—' }}</span>
+      </div>
+      <div class="field">
+        <span class="label">Status</span>
+        <span class="val">{{ call.status }}</span>
+      </div>
+      <div class="field">
+        <span class="label">From → To</span>
+        <span class="val">{{ call.from_number or '—' }} → {{ call.to_number or '—' }}</span>
+      </div>
+      <div class="field">
+        <span class="label">Started</span>
+        <span class="val">{{ call.started_at }}</span>
+      </div>
+      <div class="field">
+        <span class="label">Answered by</span>
+        <span class="val">{{ call.answered_by or '—' }}</span>
+      </div>
+      <div class="field">
+        <span class="label">Hangup</span>
+        <span class="val">{{ call.hangup_cause or '—' }}</span>
+      </div>
+      <div class="field" style="grid-column: span 2;">
+        <span class="label">Summary</span>
+        <span class="val">{{ call.summary or '—' }}</span>
+      </div>
+    </div>
+
+    <div class="transcript">
+      <h2>Turns ({{ turns|length }})</h2>
+      {% for t in turns %}
+        <div class="turn {{ t.role }}">
+          <div class="turn-who">{{ 'Caller' if t.role == 'user' else 'Agent' if t.role == 'assistant' else t.role }}</div>
+          <div class="turn-content">{{ t.content }}</div>
+        </div>
+      {% else %}
+        <p style="color: var(--muted); font-style: italic;">No turns recorded.</p>
+      {% endfor %}
+    </div>
+  </div>
+</body>
+</html>

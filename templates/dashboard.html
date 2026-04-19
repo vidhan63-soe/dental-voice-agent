@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard — Bright Smile Dental</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,0..100&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAF7F2; --ink: #1A2B29; --teal: #0C6B65; --teal-dark: #084540;
+      --teal-light: #E8F2F0; --coral: #D9644A; --muted: #6B7570;
+      --line: #E5DDD0; --paper: #FFFFFF;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: var(--bg); color: var(--ink);
+      font-family: 'Geist', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 32px 24px 64px; }
+
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 48px;
+    }
+    .brand {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 144, "SOFT" 100;
+      font-weight: 500; font-size: 20px;
+      color: var(--teal-dark);
+    }
+    .brand small {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em;
+      color: var(--muted); margin-left: 10px;
+    }
+    nav a { font-size: 14px; color: var(--muted); text-decoration: none; }
+    nav a:hover { color: var(--ink); }
+
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 144, "SOFT" 50;
+      font-weight: 400; font-size: 40px; letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+    .lead { color: var(--muted); font-size: 15px; margin-bottom: 32px; }
+
+    .summary {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 720px) { .summary { grid-template-columns: 1fr; } }
+    .summary-card {
+      background: var(--paper); border: 1px solid var(--line);
+      border-radius: 14px; padding: 20px;
+    }
+    .summary-card .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em;
+      color: var(--muted); display: block; margin-bottom: 6px;
+    }
+    .summary-card .val {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 144;
+      font-size: 32px; font-weight: 400; letter-spacing: -0.02em;
+    }
+    .summary-card.booked .val { color: var(--teal-dark); }
+    .summary-card.vacant .val { color: var(--muted); }
+
+    .toolbar {
+      display: flex; gap: 8px; align-items: center; margin-bottom: 20px;
+    }
+    .toolbar .filters {
+      display: flex; gap: 4px;
+      background: var(--paper); border: 1px solid var(--line);
+      border-radius: 10px; padding: 4px;
+    }
+    .toolbar .filters a {
+      padding: 8px 14px;
+      font-size: 13px; font-weight: 500;
+      color: var(--muted); text-decoration: none;
+      border-radius: 7px;
+      transition: background 160ms, color 160ms;
+    }
+    .toolbar .filters a:hover { color: var(--ink); }
+    .toolbar .filters a.active { background: var(--ink); color: var(--bg); }
+    .toolbar .spacer { flex: 1; }
+    .btn {
+      padding: 8px 14px; border-radius: 8px;
+      background: var(--paper); border: 1px solid var(--line);
+      color: var(--ink); font-size: 13px; text-decoration: none;
+      font-family: inherit;
+    }
+    .btn:hover { border-color: var(--muted); }
+
+    section { margin-bottom: 48px; }
+    h2 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 40;
+      font-weight: 500; font-size: 22px; letter-spacing: -0.015em;
+      margin-bottom: 16px;
+      display: flex; align-items: baseline; gap: 10px;
+    }
+    h2 .count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; color: var(--muted); font-weight: 400;
+    }
+
+    .day-block {
+      background: var(--paper); border: 1px solid var(--line);
+      border-radius: 14px; overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .day-header {
+      padding: 14px 20px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .day-header .date-label {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 40;
+      font-weight: 500; font-size: 16px; letter-spacing: -0.01em;
+    }
+    .day-header .counts {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--muted);
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    thead th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em;
+      color: var(--muted); font-weight: 500;
+      text-align: left;
+      padding: 10px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    tbody td {
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink);
+      vertical-align: top;
+    }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr.vacant td { color: var(--muted); font-style: normal; }
+    tbody tr.vacant td.time { color: var(--ink); font-style: normal; }
+
+    .pill {
+      display: inline-block;
+      padding: 2px 9px; border-radius: 99px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
+    }
+    .pill.vacant { background: var(--bg); color: var(--muted); border: 1px solid var(--line); }
+    .pill.booked { background: var(--teal-light); color: var(--teal-dark); }
+    .pill.urgent { background: #FEF0ED; color: var(--coral); }
+    .pill.emergency { background: #FEE4DE; color: #A23A21; }
+
+    a.tlink { color: var(--teal); text-decoration: none; }
+    a.tlink:hover { text-decoration: underline; }
+
+    .empty {
+      background: var(--paper);
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .calls-table {
+      background: var(--paper); border: 1px solid var(--line);
+      border-radius: 14px; overflow: hidden;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+    .time { font-family: 'Fraunces', serif; font-weight: 500; font-size: 15px; }
+    .dash { color: var(--line); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav>
+      <div><span class="brand">Bright Smile</span><small>Dental · Admin</small></div>
+      <a href="/">← Public site</a>
+    </nav>
+
+    <h1>Dashboard</h1>
+    <p class="lead">Future slots for the next two weeks, grouped by day.</p>
+
+    <div class="summary">
+      <div class="summary-card booked">
+        <span class="label">Booked appointments</span>
+        <span class="val">{{ total_booked }}</span>
+      </div>
+      <div class="summary-card vacant">
+        <span class="label">Vacant slots</span>
+        <span class="val">{{ total_vacant }}</span>
+      </div>
+      <div class="summary-card">
+        <span class="label">Calls logged</span>
+        <span class="val">{{ calls|length }}</span>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="filters">
+        <a href="/dashboard" class="{% if not filter %}active{% endif %}">All</a>
+        <a href="/dashboard?filter=booked" class="{% if filter == 'booked' %}active{% endif %}">Booked</a>
+        <a href="/dashboard?filter=vacant" class="{% if filter == 'vacant' %}active{% endif %}">Vacant</a>
+      </div>
+      <div class="spacer"></div>
+      <a class="btn" href="/api/appointments.csv">Export CSV</a>
+    </div>
+
+    {% if grouped %}
+      {% for day in grouped %}
+      <div class="day-block">
+        <div class="day-header">
+          <span class="date-label">{{ day.date_label }}</span>
+          <span class="counts">
+            {% set booked_count = day.slots | selectattr('booked') | list | length %}
+            {{ booked_count }} booked · {{ day.slots | length - booked_count }} vacant
+          </span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Status</th>
+              <th>Patient</th>
+              <th>Service</th>
+              <th>Urgency</th>
+              <th>Notes</th>
+              <th>Call</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in day.slots %}
+            <tr class="{% if s.booked %}booked{% else %}vacant{% endif %}">
+              <td class="time">{{ s.time_label }}</td>
+              <td>
+                {% if s.booked %}
+                  <span class="pill booked">Booked</span>
+                {% else %}
+                  <span class="pill vacant">Vacant</span>
+                {% endif %}
+              </td>
+              <td>{{ s.patient_name if s.patient_name else '<span class="dash">—</span>' | safe }}</td>
+              <td>{{ s.service if s.service else '<span class="dash">—</span>' | safe }}</td>
+              <td>
+                {% if s.urgency == 'emergency' %}
+                  <span class="pill emergency">emergency</span>
+                {% elif s.urgency == 'soon' %}
+                  <span class="pill urgent">soon</span>
+                {% elif s.urgency == 'routine' %}
+                  <span class="pill">routine</span>
+                {% else %}
+                  <span class="dash">—</span>
+                {% endif %}
+              </td>
+              <td>{{ s.notes if s.notes else '<span class="dash">—</span>' | safe }}</td>
+              <td>
+                {% if s.call_sid %}
+                  <a class="tlink" href="/dashboard/{{ s.call_sid }}">view →</a>
+                {% else %}
+                  <span class="dash">—</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty">
+        {% if filter == 'booked' %}
+          No booked appointments yet.
+        {% elif filter == 'vacant' %}
+          No vacant slots in the window — run <code>python scripts/generate_slots.py</code>.
+        {% else %}
+          No slots in the next 14 days — run <code>python scripts/generate_slots.py</code>.
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <section style="margin-top: 48px;">
+      <h2>Calls <span class="count">{{ calls|length }} recent</span></h2>
+      {% if calls %}
+      <div class="calls-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Started</th>
+              <th>From → To</th>
+              <th>Status</th>
+              <th>Answered by</th>
+              <th>Hangup</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in calls %}
+            <tr>
+              <td class="mono">{{ c.started_at }}</td>
+              <td class="mono">{{ c.from_number or '—' }} → {{ c.to_number or '—' }}</td>
+              <td><span class="pill">{{ c.status }}</span></td>
+              <td class="mono">{{ c.answered_by or '—' }}</td>
+              <td class="mono">{{ c.hangup_cause or '—' }}</td>
+              <td><a class="tlink" href="/dashboard/{{ c.call_sid }}">transcript →</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty">No calls logged yet.</div>
+      {% endif %}
+    </section>
+  </div>
+</body>
+</html>

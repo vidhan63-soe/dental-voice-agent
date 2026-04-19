@@ -1,0 +1,11 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+clinic.db
+audio/*.wav
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
