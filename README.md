@@ -100,26 +100,7 @@ clinic.db               SQLite database (created on first run)
 | `/api/appointments.csv` | CSV export of all appointments |
 | `/healthz` | Health check — `{"ok": true}` |
 
----
 
-## Deploying to cPanel (MilesWeb / shared hosting)
-
-1. Upload the project to `/home/<USER>/dental_voice_agent/`
-2. cPanel → **Setup Python App** → Application root: `dental_voice_agent`, startup file: `passenger_wsgi.py`, entry point: `application`
-3. Install deps: `pip install -r requirements.txt`
-4. Set all env vars in cPanel → Python App → Environment Variables
-5. Run one-time scripts via cPanel Terminal:
-   ```bash
-   python scripts/generate_slots.py
-   python scripts/generate_opening.py
-   ```
-6. Add cron jobs:
-   ```
-   0 3 * * *    python scripts/generate_slots.py    # top up slots daily
-   0 */6 * * *  python scripts/cleanup_audio.py     # clean old audio
-   ```
-
----
 
 ## Key agent capabilities
 
